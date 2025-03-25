@@ -238,10 +238,8 @@ on("chat:message", function (msg) {
 
 			log(cha_name)
 
-			let chat_cha = findCharacterWithName(cha_name);
-			// 캐릭터 이름으로 캐릭터 obj 찾아오기 + id 저장해두기기
-
-			let chat_cha_id = chat_cha.get('_id');
+			let chat_cha = findCharacterWithName(cha_name); // 캐릭터 이름으로 캐릭터 obj 찾아오기 + id 저장해두기
+			let chat_cha_id = chat_cha.get('_id');			
 
 			let current_token = null;
 			if (chat_cha || vd_setting.show_extra_standing) {
@@ -307,7 +305,12 @@ on("chat:message", function (msg) {
 					// ++ 추가기능
 					// 토큰 이미지 변경 시 아바타도 변경하여 sendchat 새로 보내기
 					chat_cha.set("avatar", imgSrc);
-					sendChat("character|" + chat_cha_id, content_str);
+					
+					let tmp_cha = findCharacterWithName("​"+cha_name); // 가로너비 없는 공백 추가
+					let tmp_cha_id = tmp_cha.get('_id');
+					tmp_cha.set("avatar", imgSrc);
+
+					sendChat("character|" + tmp_cha_id, content_str);
 
 				}
 			} else {
