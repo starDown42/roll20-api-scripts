@@ -205,43 +205,41 @@ on("chat:message", function (msg) {
 
 			// 메시지 원본
 			// ex) "!@카리아츠메리 마이메로:울상 그게 지금 말이 되는 소리야!?";
-			// ex) "!@울상 그그게 지금 말이 되는 소리야!?";
+			// ex) "!@짜증 그러니까";
 			let msg_str = msg.content.replace(state.api_tag, '');
 
-
 			let content_str = "";
-			let emot = "";
+			let emot = msg_str.split(" ")[0].replace('!@', ''); // 감정
 
 			// 대사, 감정 설정
-			// 감정에 캐릭터 이름 포함해서 말할 경우 (단, GM 일 때만)
-			if (msg_str.lastIndexOf(':') > -1 && (playerIsGM(msg.playerid) || msg.playerid == 'API')) {
-				cha_name = msg_str.split(":")[0].replace(standing_plag, ""); // 캐릭터 이름 설정
-				if (cha_name) {
-					cha_name = cha_name.trim();
+			
+			// GM일 때 + !@캐릭터이름:감정 대사 형태만 허용 ()
+			if (msg_str.lastIndexOf(':') > -1 
+			&& (playerIsGM(msg.playerid) || msg.playerid == 'API')
+			&& (msg.who == " ▶" || msg.who == " ▶") // 커스텀: 이 저널일 때만 해당
+			) {
+				// 감정 있으면 (이름:감정)
+				if(msg_str.lastIndexOf(':') > -1){	
+					cha_name = msg_str.split(":")[0].replace(standing_plag, ""); // 캐릭터 이름 설정
+					if (cha_name) {
+						cha_name = cha_name.trim();
+					}
+					emot = msg_str.split(":")[1].split(" ")[0]; // 감정
 				}
-				else {
-					sendChat("error", "/w gm GM명령어 오류 확인", null, { noarchive: true });
-					return;
-				}
-
-				emot = msg_str.split(":")[1].split(" ")[0]; // 감정
-			}
-			else {
-				emot = msg_str.split(" ")[0].replace('!@', ''); // 감정
 			}
 
 			// 감정 없으면 전체가 대사
 			content_str = emot
-				? msg_str.substr(msg_str.lastIndexOf(emot) + emot.length) // 감정 뒤 대사사
-				: msg_str.substr(msg_str.lastIndexOf(standing_plag) + standing_plag.length); // !@ 뒤 대사사 
+				? msg_str.substr(msg_str.lastIndexOf(emot) + emot.length) // 감정 뒤 대사
+				: msg_str.substr(msg_str.lastIndexOf(standing_plag) + standing_plag.length); // !@ 뒤 대사
 
 			if (content_str) { content_str = content_str.trim(); }
 			if (emot) { emot = emot.trim(); }
 
 			log(cha_name)
 
-			// 캐릭터 이름으로 캐릭터 obj 찾아오기 + id 저장해두기기
 			let chat_cha = findCharacterWithName(cha_name);
+			// 캐릭터 이름으로 캐릭터 obj 찾아오기 + id 저장해두기기
 
 			let chat_cha_id = chat_cha.get('_id');
 
