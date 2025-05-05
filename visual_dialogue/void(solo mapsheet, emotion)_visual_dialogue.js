@@ -50,7 +50,7 @@ const vd_setting = {
 	// option: 채팅 1글자당 표시 시간. 숫자가 커질수록 글자수 대비 대사의 표시시간이 길어집니다.
 	showtime_ratio: 20,
 	// option: (고급설정) 각 열이 간격이 font_size 대비 얼마만큼의 픽셀을 차지하는지의 비율을 지정합니다.
-	line_height: 1.7,
+	line_height: 1.5,
 	// option: (고급설정) 각 글자가 font_size 대비 얼마만큼의 픽셀을 차지하는지의 비율을 지정합니다.
 	letter_spacing: 1.0
 };
@@ -231,7 +231,7 @@ on("chat:message", function (msg) {
 
 			// 감정 없으면 전체가 대사
 			content_str = emot
-				? msg_str.substr(msg_str.lastIndexOf(emot) + emot.length) // 감정 뒤 대사
+				? msg_str.substr(msg_str.lastIndexOf("!@" + emot) + ("!@" + emot).length) // 감정 뒤 대사
 				: msg_str.substr(msg_str.lastIndexOf(standing_plag) + standing_plag.length); // !@ 뒤 대사
 
 			if (content_str) {
@@ -397,188 +397,6 @@ const showDialogue = function () {
 		return;
 	}
 
-	// let is_general = msg.type == "general";
-	// const font_color = vd_setting[is_general ? 'dialogue_font_color' : 'desc_font_color'];
-	// let font_size = vd_setting[is_general ? 'dialogue_font_size' : 'desc_font_size'];
-	// let bg_area = findObjs({ _type: 'graphic', name: 'vd_area', _pageid: current_page_id });
-	// let bg_name = findObjs({ _type: 'graphic', name: 'vd_name', _pageid: current_page_id });
-	// let bg_dialogue = findObjs({ _type: 'graphic', name: 'vd_dialogue', _pageid: current_page_id });
-	// let bg_panel = findObjs({ _type: 'graphic', name: 'vd_panel', _pageid: current_page_id });
-	// let split = [];
-
-	// if (bg_area.length > 0) {
-	// 	bg_area = bg_area[0];
-	// } else {
-	// 	sendChat("error", "/w gm **" + getObj('page', current_page_id).get('name') + "** 페이지에 vd_area 토큰이 없습니다.", null, { noarchive: true });
-	// 	showNextDialogue();
-	// 	return;
-	// }
-	// if (bg_name.length > 0) {
-	// 	bg_name = bg_name[0];
-	// } else {
-	// 	sendChat("error", "/w gm **" + getObj('page', current_page_id).get('name') + "** 페이지에  vd_name 토큰이 없습니다.", null, { noarchive: true });
-	// 	showNextDialogue();
-	// 	return;
-	// }
-	// if (bg_dialogue.length > 0) {
-	// 	bg_dialogue = bg_dialogue[0];
-	// } else {
-	// 	sendChat("error", "/w gm **" + getObj('page', current_page_id).get('name') + "** 페이지에  vd_dialogue 토큰이 없습니다.", null, { noarchive: true });
-	// 	showNextDialogue();
-	// 	return;
-	// }
-	// if (bg_panel.length > 0) {
-	// 	bg_panel = bg_panel[0];
-	// } else {
-	// 	sendChat("error", "/w gm **" + getObj('page', current_page_id).get('name') + "** 페이지에  vd_panel 토큰이 없습니다.", null, { noarchive: true });
-	// 	showNextDialogue();
-	// 	return;
-	// }
-	// const width = bg_dialogue.get('width');
-	// const name_width = bg_name.get('width');
-	// let blank_name = '';
-	// let blank_dialogue = '';
-	// let text_name = getObj('text', bg_name.get('gmnotes'));
-	// let text_dialogue = getObj('text', bg_dialogue.get('gmnotes'));
-	// while (name_width > blank_name.length * vd_setting['name_font_size'] * vd_setting['letter_spacing'] * 1.2) { blank_name += " "; }
-	// while (width > blank_dialogue.length * font_size * vd_setting['letter_spacing'] * 1.15) { blank_dialogue += " "; }
-
-	// if (text_name && text_name.get('_pageid') != current_page_id) {
-	// 	text_name.remove();
-	// 	text_name = null;
-	// }
-	// if (text_dialogue && text_dialogue.get('_pageid') != current_page_id) {
-	// 	text_dialogue.remove();
-	// 	text_dialogue = null;
-	// }
-	// if (!text_name) {
-	// 	text_name = createObj('text', {
-	// 		_pageid: bg_area.get('_pageid'),
-	// 		left: bg_name.get('left'),
-	// 		top: bg_name.get('top'),
-	// 		width: bg_name.get('width'),
-	// 		height: bg_name.get('height'),
-	// 		layer: 'objects',
-	// 		font_family: 'Arial',
-	// 		text: '',
-	// 		font_size: vd_setting['name_font_size'],
-	// 		color: vd_setting['name_font_color']
-	// 	});
-	// 	bg_name.set({ 'gmnotes': text_name.get('_id') });
-	// }
-	// if (!text_dialogue) {
-	// 	text_dialogue = createObj('text', {
-	// 		_pageid: bg_dialogue.get('_pageid'),
-	// 		left: bg_dialogue.get('left'),
-	// 		top: bg_dialogue.get('top'),
-	// 		width: width,
-	// 		height: bg_dialogue.get('height'),
-	// 		layer: 'objects',
-	// 		font_family: 'Arial',
-	// 		text: '',
-	// 		font_size: font_size,
-	// 		color: font_color
-	// 	});
-	// 	bg_dialogue.set({ 'gmnotes': text_dialogue.get('_id') });
-	// }
-
-	// // 예외처리할 텍스트 제외
-	// let name = msg.who + '\n' + blank_name;
-	// let filtered = msg.content;
-	// let filter_word = [
-	// 	{ regex: /\*.+\*/g, replace: /\*/g }, // *, **, ***
-	// 	{ regex: /``.+``/g, replace: /``/g }, // ``
-	// 	{ regex: /\[[^\(\)\[\]]*\]\(http[^\(\)\[\]]+\)/g, replace: /\[[^\(\)\[\]]*\]\(http[^\(\)\[\]]+\)/g }, // [](http...)
-	// 	{ regex: /<[^>]*>/g, replace: /<[^>]*>/g }, // <html>
-	// 	{ regex: /\(.{1}\" style=\"[^\)]+\)/g, replace: /\((?:[^)(]+|\((?:[^)(]+|\([^)(]*\))*\))*\)/g }, // [](#" style="...)
-	// 	{ regex: /<div style="\[.*?\]/g, replace: /<div style="/g }, // <div style="[텍스트]
-	// 	{ regex: /\$\[\[.+\]\]/g, replace: /\$\[\[.+\]\]/g }]; // [[]]
-	// for (let i = 0; i < filter_word.length; i++) {
-	// 	let match = filtered.match(filter_word[i].regex);
-	// 	if (match) {
-	// 		for (let j = 0; j < match.length; j++) {
-	// 			filtered = filtered.replace(match[j], match[j].replace(filter_word[i].replace, ''));
-	// 		}
-	// 	}
-	// }
-	// let ruby_match = filtered.match(/\([^\(\)\[\]]+\)\[[^\(\)\[\]]*\]/g);
-	// if (ruby_match) {
-	// 	for (let j = 0; j < ruby_match.length; j++) {
-	// 		let rubystr_split = ruby_match[j].substring(1, ruby_match[j].length - 1).split(')[');
-	// 		filtered = filtered.replace(ruby_match[j], rubystr_split[1] + "(" + rubystr_split[0] + ")");
-	// 	}
-	// }
-
-	// if (filtered.length == 0) {
-	// 	showNextDialogue();
-	// 	return;
-	// }
-	// let str = filtered;
-
-	// let desc_ratio = is_general ? 1 : 0.8;
-	// let amount = Math.ceil(width / font_size / vd_setting['letter_spacing'] * 3) - 3;
-	// let idx = 0;
-	// let length = 0;
-	// const thirdchar = ['\'', ' ', ',', '.', '!', ':', ';', '"'];
-	// const halfchar = ['[', ']', '(', ')', '*', '^', '-', '~', '<', '>', '+', 'l', 'i', '1'];
-	// const arr = thirdchar.concat(halfchar);
-	// let divided = false;
-	// for (let i = 0; i < str.length; i++) {
-	// 	let c = str[i];
-	// 	length += 3;
-	// 	for (let j = 0; j < arr.length; j++) {
-	// 		if (c == arr[j]) {
-	// 			length -= (j < thirdchar.length ? 2 : 1);
-	// 			break;
-	// 		}
-	// 	}
-	// 	if (length >= amount * desc_ratio || c == state.vd_divider) {
-	// 		let substr = str.substring(idx, i + 1).replace(state.vd_divider, '');
-	// 		split.push(is_general || msg.who.length > 0 ? substr : getStringWithMargin(amount, length, desc_ratio, substr));
-	// 		idx = i + 1;
-	// 		length = 0;
-	// 		if ((split.length + 1) * font_size * vd_setting['letter_spacing'] * 3 > bg_dialogue.get('height')) {
-	// 			state.vd_stock.splice(1, 0, { content: filtered.substring(idx, str.length), time: msg.time, playerid: msg.playerid, type: msg.type, who: msg.who });
-	// 			divided = true;
-	// 			break;
-	// 		}
-	// 	}
-	// }
-	// if (idx < str.length && !divided) {
-	// 	let substr = str.substring(idx, str.length);
-	// 	split.push(is_general || msg.who.length > 0 ? substr : getStringWithMargin(amount, length, desc_ratio, substr));
-	// }
-
-	// if (is_general || msg.who.length > 0) {
-	// 	while ((split.length + 1) * font_size * vd_setting['line_height'] < bg_dialogue.get('height')) {
-	// 		split.push(' ');
-	// 	}
-	// } else {
-	// 	split.splice(0, 0, ' ');
-	// }
-	// split.push(blank_dialogue);
-	// text_name.set({
-	// 	text: name, left: bg_name.get('left'), font_size: vd_setting['name_font_size'], color: vd_setting['name_font_color'],
-	// 	top: bg_name.get('top') + vd_setting['name_font_size'] * vd_setting['line_height'] / 2
-	// });
-	// text_dialogue.set({
-	// 	text: split.join('\n'), font_size: font_size, color: font_color,
-	// 	left: msg.type == 'desc' ? bg_panel.get('left') : bg_dialogue.get('left'),
-	// 	top: msg.type == 'desc' ? bg_panel.get('top') : bg_dialogue.get('top')
-	// });
-
-	// toFront(text_name);
-	// toFront(text_dialogue);
-	// setTimeout(() => {
-
-	// 	showHideDecorations('vd_panel', true);
-	// 	showHideDecorations('vd_deco', msg.type != 'desc');
-	// 	toFront(text_name);
-	// 	toFront(text_dialogue);
-	// }, 100);
-
-	// clearTextWithout(text_name, text_dialogue);
-
 	let is_general = msg.type == "general";
 	let str = setTextToken({
 		is_general, msg,
@@ -613,46 +431,6 @@ const showDialogue = function () {
 				current_page_id
 			});
 
-			// let nm = chat_cha ? msg.who : vd_setting.extra_name;
-			// let rt = findObjs({ _type: 'deck', name: vd_setting.deck_name });
-			// if (rt.length == 0) {
-			// 	sendChat("error", "/w gm 이름이 **" + vd_setting.deck_name + "**인 카드 덱이 없습니다.", null, { noarchive: true });
-			// 	showNextDialogue();
-			// 	return;
-			// } else {
-			// 	let opt = {
-			// 		name: 'vd_standing',
-			// 		_pageid: bg_area.get('_pageid'),
-			// 		width: vd_setting.width,
-			// 		height: vd_setting.height,
-			// 		bar1_value: msg.who,
-			// 		layer: 'gmlayer',
-			// 		imgsrc: rt[0].get('avatar').replace('med', 'thumb').replace('max', 'thumb'),
-			// 		represents: chat_cha ? chat_cha.get('_id') : ''
-			// 	};
-			// 	const std = findObjs({ _type: 'card', _deckid: rt[0].get('_id'), name: msg.who });
-			// 	if (std.length > 0) {
-			// 		opt.imgsrc = std[0].get('avatar').replace('med', 'thumb').replace('max', 'thumb');
-			// 	}
-
-			// 	if (tokens.length >= vd_setting.max_number) {
-			// 		opt.left = lowest_priority.get('left');
-			// 	} else {
-			// 		opt.left = arrangeStandings(true);
-			// 	}
-			// 	opt.top = bg_area.get('top');
-
-			// 	if (tokens.length >= vd_setting.max_number) {
-			// 		lowest_priority.set(opt);
-			// 		current_token = lowest_priority;
-			// 	} else {
-			// 		current_token = createObj('graphic', opt);
-			// 	}
-			// 	toFront(current_token);
-			// 	setTimeout(() => {
-			// 		current_token.set({ tint_color: 'transparent', gmnotes: Date.now(), layer: "map" });
-			// 	}, 100);
-			// }
 		} else if (current_token) {
 			toFront(current_token);
 			current_token.set({ tint_color: 'transparent', gmnotes: Date.now() });
@@ -978,7 +756,7 @@ const setTextToken = function ({
 			split.push(is_general || msg.who.length > 0 ? substr : getStringWithMargin(amount, length, desc_ratio, substr));
 			idx = i + 1;
 			length = 0;
-			if ((split.length + 1) * font_size * vd_setting['letter_spacing'] * 3 > bg_dialogue.get('height')) {
+			if ((split.length + 1) * font_size * vd_setting['letter_spacing'] * 1.5 > bg_dialogue.get('height')) {
 				state.vd_stock.splice(1, 0, { content: filtered.substring(idx, str.length), time: msg.time, playerid: msg.playerid, type: msg.type, who: msg.who });
 				divided = true;
 				break;
